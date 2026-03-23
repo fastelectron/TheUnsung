@@ -84,8 +84,8 @@ You will need a LaTeX distribution installed:
 Clone the repository and compile:
 
 ```bash
-git clone https://github.com/your-username/forgotten-brilliance.git
-cd forgotten-brilliance
+git clone https://github.com/fastelectron/TheUnsung.git
+cd TheUnsung
 
 # Compile twice — first pass builds content, second resolves TOC and references
 pdflatex women_scientists_final.tex
