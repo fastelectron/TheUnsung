@@ -1,0 +1,1223 @@
+%% ============================================================
+%%  Forgotten Brilliance: Women Scientists Who Shaped the World
+%%  A motivational report for students
+%%  Compile with: pdflatex -shell-escape women_scientists.tex  (twice for TOC)
+%%
+%%  IMAGE INSTRUCTIONS:
+%%  Download portrait images from Wikipedia (URLs listed below each scientist)
+%%  and save them in the same folder as this .tex file with the filenames shown.
+%%  If images are absent, the document compiles with labelled placeholder boxes.
+%% ============================================================
+
+\documentclass[12pt,a4paper]{article}
+
+%% ── Packages ─────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, headheight=15pt]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{eso-pic}          % cover background
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, positioning, calc}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, theorems}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{mdframed}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{colortbl}
+
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{ifthen}
+
+%% ── Colours ──────────────────────────────────────────────────
+\definecolor{deepplum}   {HTML}{3D1A5C}
+\definecolor{midplum}    {HTML}{6B3FA0}
+\definecolor{softplum}   {HTML}{EDE0F7}
+\definecolor{goldhigh}   {HTML}{D4A017}
+\definecolor{goldlight}  {HTML}{FDF3D0}
+\definecolor{steelblue}  {HTML}{2C5F8A}
+\definecolor{steellight} {HTML}{E0EAF5}
+\definecolor{coralred}   {HTML}{C0392B}
+\definecolor{tealgreen}  {HTML}{1A7A6E}
+\definecolor{teallight}  {HTML}{D8F0EC}
+\definecolor{charcoal}   {HTML}{2D2D2D}
+\definecolor{lightgray}  {HTML}{F5F5F5}
+\definecolor{medgray}    {HTML}{AAAAAA}
+
+%% ── hyperref setup ───────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deepplum,
+  urlcolor=steelblue,
+  citecolor=tealgreen,
+  pdftitle={Forgotten Brilliance: Women Scientists Who Shaped the World},
+  pdfauthor={compiled report},
+  pdfsubject={Women in Science – History and Motivation}
+}
+
+%% ── Typography ───────────────────────────────────────────────
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+\setstretch{1.15}
+\emergencystretch=2em   % gives TeX elastic budget to avoid sub-pt overflows
+
+%% Heading colours
+\titleformat{\section}[block]
+  {\Large\bfseries\color{deepplum}}{\thesection}{1em}{}[{\color{midplum}\titlerule[1pt]}]
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{steelblue}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}[block]
+  {\normalsize\bfseries\color{tealgreen}}{\thesubsubsection}{0.6em}{}
+
+%% ── Page style ───────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deepplum}\textit{Forgotten Brilliance}}
+\fancyhead[R]{\small\color{deepplum}\textit{Women Scientists Who Shaped the World}}
+\fancyfoot[C]{\small\color{medgray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\color{midplum}\hrule width\headwidth height\headrulewidth}
+
+%% ── tcolorbox styles ─────────────────────────────────────────
+% Profile card header
+\tcbset{
+  profilebox/.style={
+    enhanced, breakable,
+    colback=softplum!40,
+    colframe=deepplum,
+    colbacktitle=deepplum,
+    coltitle=white,
+    fonttitle=\bfseries\large,
+    arc=6pt,
+    boxrule=1pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={colframe=deepplum, arc=4pt}
+  },
+  factbox/.style={
+    enhanced,
+    colback=goldlight,
+    colframe=goldhigh,
+    arc=4pt,
+    boxrule=0.6pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    fonttitle=\bfseries\small\color{charcoal},
+    coltitle=charcoal,
+    attach boxed title to top left={xshift=6pt, yshift=-\tcboxedtitleheight/2},
+    boxed title style={colback=goldhigh, colframe=goldhigh, arc=3pt}
+  },
+  quotebox/.style={
+    enhanced,
+    colback=steellight,
+    colframe=steelblue,
+    arc=6pt,
+    boxrule=0pt,
+    borderline west={4pt}{0pt}{steelblue},
+    left=12pt, right=8pt, top=6pt, bottom=6pt,
+    fontupper=\itshape\large,
+    colupper=charcoal
+  },
+  motivationbox/.style={
+    enhanced, breakable,
+    colback=teallight,
+    colframe=tealgreen,
+    colbacktitle=tealgreen,
+    coltitle=white,
+    fonttitle=\bfseries,
+    arc=6pt,
+    boxrule=1pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={colframe=tealgreen, arc=4pt}
+  }
+}
+
+%% ── Fixed-size portrait macro ────────────────────────────────
+%% Every portrait is forced to exactly \photoW x \photoH regardless
+%% of the downloaded image's original dimensions or aspect ratio.
+%% A 'clip' viewport crops any overflow so nothing bleeds outside.
+\newlength{\photoW}\setlength{\photoW}{4.2cm}
+\newlength{\photoH}\setlength{\photoH}{5.2cm}
+
+\newcommand{\scientistphoto}[1]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=\photoW, height=\photoH,
+                     keepaspectratio=false]{#1}%
+  }{%
+    \fboxsep=0pt
+    \fcolorbox{medgray}{lightgray}{%
+      \begin{minipage}[c][\photoH][c]{\photoW}%
+        \centering\color{medgray}\small
+        Portrait\\placeholder\\[4pt]
+        \texttt{\detokenize{#1}}\\[4pt]
+        See URL in source%
+      \end{minipage}}%
+  }%
+}
+
+%% ── Profile environment ──────────────────────────────────────
+%% Layout:
+%%   1. Thick rule + name banner (tcolorbox, NOT breakable, fixed height)
+%%   2. Two-column header: portrait left | metadata right  (minipage, fixed)
+%%   3. Thin rule separator
+%%   4. Biography text in full-width free flow (no box, breaks across pages)
+%%   5. Bottom rule
+%% The biography is NEVER inside any box, so it can never overflow.
+\newenvironment{scientistprofile}[6]{%
+  % #1 Name  #2 Years  #3 Field  #4 Nationality  #5 Image file  #6 Wikilink
+  %% ── Name banner ──────────────────────────────────────────
+  \begin{tcolorbox}[enhanced, sharp corners,
+      colback=deepplum, colframe=deepplum,
+      left=12pt, right=8pt, top=6pt, bottom=6pt,
+      boxrule=0pt]
+    {\bfseries\large\color{white} #1}\hfill
+    {\normalsize\color{softplum} #2}
+  \end{tcolorbox}%
+  \vspace{-1pt}%
+  %% ── Image + metadata header ──────────────────────────────
+  \noindent\colorbox{softplum!35}{%
+    \begin{minipage}[c]{\dimexpr\textwidth-2\fboxsep\relax}%
+      \vspace{6pt}%
+      \hspace{6pt}%
+      \begin{minipage}[c]{\photoW}%
+        \scientistphoto{#5}%
+      \end{minipage}%
+      \hspace{12pt}%
+      \begin{minipage}[c]{\dimexpr\textwidth-\photoW-30pt\relax}%
+        {\small\textbf{\color{deepplum}Field:}\ \color{charcoal}#3}\par\vspace{4pt}
+        {\small\textbf{\color{deepplum}Nationality:}\ \color{charcoal}#4}\par\vspace{8pt}
+        {\small\href{#6}{\color{steelblue}\underline{Wikipedia page}}}%
+      \end{minipage}%
+      \vspace{6pt}%
+    \end{minipage}%
+  }%
+  \par\vspace{4pt}%
+  \noindent{\color{deepplum}\rule{\textwidth}{0.8pt}}\par\vspace{6pt}%
+  %% ── Biography body — free flow, NO surrounding box ───────
+  \setlength{\parskip}{5pt}%
+  \setlength{\parindent}{0pt}%
+}{%
+  \par\vspace{6pt}%
+  \noindent{\color{midplum}\rule{\textwidth}{0.8pt}}\par\vspace{8pt}%
+}
+
+%% ── Key facts table helper ───────────────────────────────────
+\newcommand{\keyfacts}[1]{%
+  \begin{tcolorbox}[factbox, title={Key Facts}]
+  \begin{tabular}{@{}p{0.3\linewidth}p{0.62\linewidth}@{}}
+  #1
+  \end{tabular}
+  \end{tcolorbox}
+}
+
+%% ── Pull-quote ───────────────────────────────────────────────
+\newcommand{\pullquote}[2]{%
+  \begin{tcolorbox}[quotebox]
+  ``#1''\\[4pt]
+  {\small\normalfont\color{medgray}--- #2}
+  \end{tcolorbox}
+}
+
+%% =============================================================
+%%  DOCUMENT BEGINS
+%% =============================================================
+\begin{document}
+
+%% ── COVER PAGE ───────────────────────────────────────────────
+\begin{titlepage}
+\pagecolor{deepplum}
+\color{white}
+\vspace*{2cm}
+\begin{center}
+{\fontsize{12}{16}\selectfont\color{goldhigh}\textit{A Motivational Report for Students}}\\[1.5cm]
+
+{\fontsize{32}{40}\selectfont\bfseries Forgotten}\\[0.3cm]
+{\fontsize{32}{40}\selectfont\bfseries Brilliance}\\[1.2cm]
+
+{\color{medgray}\rule{12cm}{0.4pt}}\\[1cm]
+
+{\fontsize{14}{20}\selectfont Women Scientists Who Shaped\\[0.4cm]
+the World --- and Didn't Get the Credit}\\[1.5cm]
+
+{\color{medgray}\rule{12cm}{0.4pt}}\\[2cm]
+
+\begin{minipage}{0.75\textwidth}
+\centering
+{\large\itshape ``Science and everyday life cannot and should not be separated.''}\\[0.5cm]
+{\normalsize\color{goldhigh} --- Rosalind Franklin}
+\end{minipage}
+
+\vfill
+{\small\color{medgray} Compiled 2026 \quad|\quad For educational and motivational use}\\[6pt]
+{\small\color{softplum!70} Generated using \textbf{Claude Sonnet 4.6} by Anthropic \quad|\quad 23 March 2026}
+\end{center}
+\end{titlepage}
+\nopagecolor
+
+%% ── TABLE OF CONTENTS ────────────────────────────────────────
+\newpage
+\setcounter{page}{1}
+{\hypersetup{linkcolor=deepplum}
+\tableofcontents}
+\newpage
+
+%% =============================================================
+\section*{Foreword: Why This Report Exists}
+\addcontentsline{toc}{section}{Foreword}
+\vspace{-4pt}
+
+\begin{tcolorbox}[motivationbox, title={A Message to Every Student Reading This}]
+Throughout history, women have made discoveries that moved humanity forward — cured diseases, unlocked the secrets of stars, redefined mathematics, and shaped the digital world we live in. Many of these women were ignored, sidelined, ridiculed, or had their work stolen and published under someone else's name.
+
+This report is not just about injustice. It is about \textbf{extraordinary resilience}. Every scientist in these pages kept going — in the face of institutions that locked their doors, colleagues who dismissed their ideas, and committees that handed prizes to the wrong people.
+
+If you have ever felt that your intelligence was overlooked, that the odds were stacked against you, or that the room wasn't built for you — \textbf{this report was written for you.}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\newpage
+
+%% =============================================================
+\section{Rosalind Franklin}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Rosalind_Franklin_(1920-1958).jpg
+%%           Save as: rosalind_franklin.jpg
+
+\begin{scientistprofile}
+  {Rosalind Franklin}
+  {1920 -- 1958}
+  {X-ray Crystallography / Chemistry}
+  {British}
+  {rosalind_franklin.jpg}
+  {https://en.wikipedia.org/wiki/Rosalind_Franklin}
+
+\subsubsection*{Early Life and Education}
+Rosalind Elsie Franklin was born on 25 July 1920 in Notting Hill, London, into an affluent and influential British Jewish family. She excelled at school from an early age and won a scholarship to Cambridge University, where she studied natural sciences at Newnham College, graduating in 1941. She later earned her PhD from Cambridge in 1945, working on the physical chemistry of coal --- research that directly influenced industrial carbon science.
+
+\subsubsection*{The Discovery That Changed Biology}
+In 1951, Franklin joined King's College London as a research associate to study biological molecules using X-ray diffraction. Her work produced \textbf{Photo 51} — an X-ray diffraction image of DNA taken in May 1952. This single image was the clearest experimental evidence at the time that DNA had a helical structure.
+
+Without Franklin's knowledge or consent, her colleague Maurice Wilkins showed Photo 51 to James Watson. Watson and Francis Crick used the measurements encoded in the image to construct their famous double-helix model, published in \textit{Nature} in April 1953. Franklin's contribution was mentioned only obliquely.
+
+\subsubsection*{What She Was Robbed Of}
+In 1962, Watson, Crick, and Wilkins received the Nobel Prize in Physiology or Medicine. Franklin had died of ovarian cancer in 1958, aged 37. The Nobel Prize is not awarded posthumously, so she could not be considered. However, it is widely accepted by historians of science that she was never acknowledged appropriately even during her lifetime.
+
+\subsubsection*{Later Work}
+Franklin went on to produce landmark X-ray work on tobacco mosaic virus and polio virus structures before her death — contributions entirely her own, recognised fully only decades later.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 25 July 1920, London, UK\\[3pt]
+\textbf{Died} & 16 April 1958, London, UK\\[3pt]
+\textbf{Field} & Chemistry, Biophysics\\[3pt]
+\textbf{Key discovery} & Photo 51 — evidence of DNA double helix\\[3pt]
+\textbf{Injustice} & Work used without permission; excluded from Nobel Prize\\[3pt]
+\textbf{Legacy} & The Rosalind Franklin University of Medicine and Science bears her name\\
+}
+
+\pullquote{In my view, all that is necessary for faith is the belief that by doing our best we shall come nearer to success and that success in our aims is worth attaining.}{Rosalind Franklin}
+
+\vspace{6pt}
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Rosalind_Franklin}
+
+\newpage
+
+%% =============================================================
+\section{Lise Meitner}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Lise_Meitner_(1878-1968),_lecturing_at_Catholic_University,_1946.jpg
+%%           Save as: lise_meitner.jpg
+
+\begin{scientistprofile}
+  {Lise Meitner}
+  {1878 -- 1968}
+  {Nuclear Physics}
+  {Austrian--Swedish}
+  {lise_meitner.jpg}
+  {https://en.wikipedia.org/wiki/Lise_Meitner}
+
+\subsubsection*{Early Life and Education}
+Elise Meitner was born on 7 November 1878 in Vienna. She developed a passion for mathematics and physics from childhood. Women were barred from Austrian universities until 1897; once admission was permitted, she studied with such intensity that she passed her external matriculation exam in two years. She earned her doctorate in physics from the University of Vienna in 1906 --- only the second woman to receive one there.
+
+\subsubsection*{Nuclear Fission}
+Meitner spent thirty years collaborating with chemist Otto Hahn at the Kaiser Wilhelm Institute in Berlin. In 1938, forced to flee Nazi Germany (she was Jewish), she continued their work from Stockholm in exile. In December 1938, Hahn conducted experiments they had designed together and wrote to Meitner about confusing results. Over a walk in the snowy woods of Kungälv, Meitner and her nephew Otto Frisch provided the theoretical explanation: the uranium nucleus had \textbf{split} — nuclear fission. Meitner coined the term.
+
+\subsubsection*{The Nobel Omission}
+In 1944, Otto Hahn alone received the Nobel Prize in Chemistry for the discovery of nuclear fission. Meitner was not included despite having provided the theoretical framework that made sense of the experimental results. According to the Nobel Prize archive, she was nominated 49 times across Physics and Chemistry --- more than almost any scientist never to win. A 1997 study in \textit{Physics Today} concluded that her exclusion resulted from ``disciplinary bias, political obtuseness, ignorance, and haste'' on the part of the committee.
+
+\subsubsection*{The Atomic Bomb and Conscience}
+When the Manhattan Project was formed, Meitner was invited to participate. She refused. Her ethical opposition to weapons of mass destruction was absolute — a stance she maintained for the rest of her life.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 7 November 1878, Vienna, Austria\\[3pt]
+\textbf{Died} & 27 October 1968, Cambridge, UK\\[3pt]
+\textbf{Field} & Nuclear Physics\\[3pt]
+\textbf{Key discovery} & Co-discovered nuclear fission; coined the term\\[3pt]
+\textbf{Injustice} & Nobel Prize given solely to Hahn; 49 nominations (Nobel archive), zero awards\\[3pt]
+\textbf{Legacy} & Element 109, \textit{Meitnerium} (Mt), is named after her\\
+}
+
+\pullquote{I will have nothing to do with a bomb!}{Lise Meitner, on refusing the Manhattan Project}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Lise_Meitner}
+
+\newpage
+
+%% =============================================================
+\section{Emmy Noether}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Noether.jpg
+%%           Save as: emmy_noether.jpg
+
+\begin{scientistprofile}
+  {Emmy Noether}
+  {1882 -- 1935}
+  {Mathematics (Abstract Algebra, Theoretical Physics)}
+  {German}
+  {emmy_noether.jpg}
+  {https://en.wikipedia.org/wiki/Emmy_Noether}
+
+\subsubsection*{The Greatest Algebraist of the 20th Century}
+Amalie Emmy Noether was born on 23 March 1882 in Erlangen, Bavaria. Her father was a respected mathematics professor, and Emmy showed exceptional mathematical talent early. She earned her doctorate in mathematics in 1907 — one of the first women to do so in Germany.
+
+\subsubsection*{Noether's Theorem}
+In 1915, at the invitation of David Hilbert and Felix Klein, Noether moved to G\"{o}ttingen. Here she proved \textbf{Noether's Theorem}, published in 1918, arguably the most important result connecting physics and mathematics in the 20th century: \textit{every continuous symmetry in physics corresponds to a conservation law}. This theorem underpins conservation of energy, momentum, and angular momentum --- the entire framework of modern physics from classical mechanics to quantum field theory.
+
+\subsubsection*{Institutional Barriers}
+Despite her monumental contributions, Noether was repeatedly denied official academic positions because of her gender. At G\"{o}ttingen, she was initially only permitted to lecture under Hilbert's name — the university advertised ``Professor Hilbert's course'' to circumvent rules against female lecturers. She was denied a salary for years. When the Nazis rose to power in 1933, she was dismissed from her position because she was Jewish.
+
+\subsubsection*{Legacy and Recognition}
+Albert Einstein called her ``the most significant creative mathematical genius thus far produced.'' She is credited with transforming abstract algebra from a collection of tools into a coherent theoretical framework. She died in 1935 in Bryn Mawr, Pennsylvania, aged 53 — never having received a Nobel Prize, despite the fact that theoretical physicists who built on her theorem did.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 23 March 1882, Erlangen, Germany\\[3pt]
+\textbf{Died} & 14 April 1935, Bryn Mawr, USA\\[3pt]
+\textbf{Field} & Abstract Algebra, Mathematical Physics\\[3pt]
+\textbf{Key contribution} & Noether's Theorem; founding of modern abstract algebra\\[3pt]
+\textbf{Barrier} & Denied positions due to gender; then expelled by Nazis\\[3pt]
+\textbf{Legacy} & Called ``the most significant creative mathematical genius'' by Einstein\\
+}
+
+\pullquote{My methods are really methods of working and thinking; this is why they have crept in everywhere anonymously.}{Emmy Noether}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Emmy_Noether}
+
+\newpage
+
+%% =============================================================
+\section{Cecilia Payne-Gaposchkin}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Cecilia_Payne-Gaposchkin.jpg
+%%           Save as: cecilia_payne.jpg
+
+\begin{scientistprofile}
+  {Cecilia Payne-Gaposchkin}
+  {1900 -- 1979}
+  {Astronomy / Astrophysics}
+  {British--American}
+  {cecilia_payne.jpg}
+  {https://en.wikipedia.org/wiki/Cecilia_Payne-Gaposchkin}
+
+\subsubsection*{Discovering What Stars Are Made Of}
+Cecilia Helena Payne was born on 10 May 1900 in Wendover, England. She studied at Cambridge but was not awarded a degree because women were not granted Cambridge degrees at the time. She moved to Harvard, where she could pursue her passion for astronomy.
+
+In her 1925 doctoral dissertation, Payne applied new atomic physics to the spectra of stars and concluded that stars are composed almost entirely of \textbf{hydrogen and helium} — a revolutionary finding that contradicted the prevailing belief that stars had similar compositions to Earth.
+
+\subsubsection*{Pressured to Retract Her Own Discovery}
+Her PhD supervisor Henry Norris Russell --- one of the most influential astronomers of the era --- pressured her to describe her own result as ``spurious'' and ``clearly impossible'' in the published version of her thesis, believing it contradicted established physics. She complied. Four years later in 1929, Russell arrived at the same conclusion independently and published it --- receiving most of the credit for decades.
+
+\subsubsection*{Long-Overdue Recognition}
+Payne-Gaposchkin was eventually appointed the first female professor at Harvard, and later chair of the Astronomy department. The astronomer Otto Struve later called her PhD thesis ``undoubtedly the most brilliant Ph.D. thesis ever written in astronomy.'' Her discovery is now considered one of the foundational results in stellar astrophysics.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 10 May 1900, Wendover, England\\[3pt]
+\textbf{Died} & 7 December 1979, Cambridge, USA\\[3pt]
+\textbf{Field} & Astrophysics, Spectroscopy\\[3pt]
+\textbf{Key discovery} & Stars are primarily composed of hydrogen and helium\\[3pt]
+\textbf{Injustice} & Forced to call her own result ``spurious''; Russell credited for decades\\[3pt]
+\textbf{Legacy} & First female professor \& department chair at Harvard Astronomy\\
+}
+
+\pullquote{Young people, especially young women, often ask me for advice. Here it is... do not undertake a scientific career in quest of fame or money. There are easier and better ways to reach them.}{Cecilia Payne-Gaposchkin}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Cecilia_Payne-Gaposchkin}
+
+\newpage
+
+%% =============================================================
+\section{Chien-Shiung Wu}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Chien-shiung_Wu_(1912-1997)_C.jpg
+%%           Save as: chien_shiung_wu.jpg
+
+\begin{scientistprofile}
+  {Chien-Shiung Wu}
+  {1912 -- 1997}
+  {Experimental Nuclear Physics}
+  {Chinese--American}
+  {chien_shiung_wu.jpg}
+  {https://en.wikipedia.org/wiki/Chien-Shiung_Wu}
+
+\subsubsection*{``The First Lady of Physics''}
+Chien-Shiung Wu was born on 31 May 1912 in Liuhe, Jiangsu, China. She earned her bachelor's degree from the National Central University of China and moved to the United States in 1936, completing her PhD at Berkeley in 1940 under Emilio Segrè.
+
+\subsubsection*{The Experiment That Changed Physics}
+In 1956, theoretical physicists Tsung-Dao Lee and Chen-Ning Yang proposed that the law of conservation of parity — a fundamental assumption in physics — might be violated in weak nuclear interactions. The physics community was deeply sceptical. Wu designed and executed an extraordinarily delicate experiment using radioactive cobalt-60 atoms cooled near absolute zero. Her results confirmed Lee and Yang's theory, overturning decades of foundational physics.
+
+\subsubsection*{The Nobel Exclusion}
+In 1957 — less than a year after Wu's experiment — Lee and Yang received the Nobel Prize in Physics for the theoretical prediction. Wu, who had proven it experimentally and made the discovery possible, was not included. Her exclusion was widely condemned in the scientific community. She later received the inaugural Wolf Prize in Physics (1978), the National Medal of Science, and many other honours, but the Nobel never came.
+
+\subsubsection*{Legacy}
+Wu also made key contributions to the Manhattan Project, investigating uranium enrichment, and later made fundamental measurements of beta decay. She was a tireless advocate for women in science.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 31 May 1912, Liuhe, China\\[3pt]
+\textbf{Died} & 16 February 1997, New York, USA\\[3pt]
+\textbf{Field} & Experimental Nuclear Physics\\[3pt]
+\textbf{Key experiment} & Proved violation of parity conservation in weak interactions\\[3pt]
+\textbf{Injustice} & Nobel (1957) went to Lee \& Yang; Wu excluded despite doing the experiment\\[3pt]
+\textbf{Legacy} & Wolf Prize (1978); National Medal of Science; asteroid 2752 Wu\\
+}
+
+\pullquote{There is only one thing worse than coming home from the lab to a sink full of dirty dishes, and that is not going to the lab at all.}{Chien-Shiung Wu}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Chien-Shiung_Wu}
+
+\newpage
+
+%% =============================================================
+\section{Jocelyn Bell Burnell}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Jocelyn_Bell_Burnell_2009.jpg
+%%           Save as: jocelyn_bell_burnell.jpg
+
+\begin{scientistprofile}
+  {Jocelyn Bell Burnell}
+  {1943 -- present}
+  {Radio Astronomy / Astrophysics}
+  {Northern Irish}
+  {jocelyn_bell_burnell.jpg}
+  {https://en.wikipedia.org/wiki/Jocelyn_Bell_Burnell}
+
+\subsubsection*{Discovery of Pulsars}
+Susan Jocelyn Bell was born on 15 July 1943 in Belfast, Northern Ireland. While completing her PhD at Cambridge under supervisor Antony Hewish, she helped build an 81.5-MHz radio telescope covering 4.5 acres (1.8 hectares) and analysed the resulting data by hand. In 1967, she detected a highly regular radio pulse from a fixed point in the sky --- repeating every 1.3373 seconds with extraordinary precision.
+
+Initially nicknamed ``LGM-1'' (Little Green Men), the source was ultimately confirmed as a rapidly rotating neutron star — a \textbf{pulsar}. Bell Burnell's discovery opened an entirely new branch of astrophysics.
+
+\subsubsection*{The Nobel Controversy}
+In 1974, the Nobel Prize in Physics was awarded to Antony Hewish and Martin Ryle for the discovery of pulsars and contributions to radio astronomy. Jocelyn Bell Burnell — the person who actually found the signal — was not included, despite being a PhD student at the time and doing the observational work.
+
+Sir Fred Hoyle and many physicists publicly condemned the omission. Bell Burnell herself has handled the controversy with extraordinary grace, stating that Nobel Prizes typically are not given to students.
+
+\subsubsection*{A Life of Giving Back}
+When Bell Burnell was awarded the \pounds3 million Breakthrough Prize in 2018, she donated the entire sum to fund scholarships for women, under-represented ethnic minorities, and refugees to become physics researchers.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 15 July 1943, Belfast, Northern Ireland\\[3pt]
+\textbf{Field} & Radio Astronomy, Astrophysics\\[3pt]
+\textbf{Key discovery} & Discovery of pulsars (1967)\\[3pt]
+\textbf{Injustice} & Nobel (1974) went to supervisor Hewish, not to her\\[3pt]
+\textbf{Legacy} & Donated entire \pounds3 million Breakthrough Prize to diversity scholarships\\
+}
+
+\pullquote{I believe we [women] are going to have to fight hard for science, and there's nothing like a fight to bring out the best in people.}{Jocelyn Bell Burnell}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Jocelyn_Bell_Burnell}
+
+\newpage
+
+%% =============================================================
+\section{Hedy Lamarr}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Hedy_Lamarr_Publicity_Photo.jpg
+%%           Save as: hedy_lamarr.jpg
+
+\begin{scientistprofile}
+  {Hedy Lamarr}
+  {1914 -- 2000}
+  {Electrical Engineering / Communications}
+  {Austrian--American}
+  {hedy_lamarr.jpg}
+  {https://en.wikipedia.org/wiki/Hedy_Lamarr}
+
+\subsubsection*{Hollywood Star and Secret Inventor}
+Hedwig Eva Maria Kiesler was born on 9 November 1914 in Vienna. Known to the world as a Hollywood actress, she was simultaneously one of the most creative inventors of the 20th century. Largely self-taught in engineering and an avid tinkerer from childhood, she kept an inventor's table in her trailer on film sets.
+
+\subsubsection*{Frequency-Hopping Spread Spectrum}
+During World War II, Lamarr became concerned that radio-guided torpedoes were vulnerable to signal jamming. Working with composer George Antheil, she developed the concept of \textbf{frequency-hopping spread spectrum}: a communications signal that rapidly hops between multiple frequencies in a pseudorandom sequence, making it nearly impossible to intercept or jam. They filed US Patent 2,292,387 in 1942.
+
+\subsubsection*{How Her Invention Became the Backbone of Wi-Fi}
+The US military dismissed the technology at the time and it entered the public domain before it was adopted. The patent expired in 1959. Decades later, frequency-hopping spread spectrum became the foundational technology for \textbf{Wi-Fi, Bluetooth, GPS, and CDMA mobile communications} — technologies used by billions of people every day. Lamarr received no royalties.
+
+\subsubsection*{Recognition, Decades Late}
+In 1997, Lamarr and Antheil received the Electronic Frontier Foundation Pioneer Award. In 2014, she was posthumously inducted into the National Inventors Hall of Fame. She died in 2000, having been financially destitute for much of her later life.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 9 November 1914, Vienna, Austria\\[3pt]
+\textbf{Died} & 19 January 2000, Casselberry, USA\\[3pt]
+\textbf{Field} & Communications Engineering, Cryptography\\[3pt]
+\textbf{Key invention} & Frequency-hopping spread spectrum (basis of Wi-Fi, Bluetooth, GPS)\\[3pt]
+\textbf{Injustice} & Patent expired before use; received no royalties\\[3pt]
+\textbf{Legacy} & Inducted into National Inventors Hall of Fame (2014)\\
+}
+
+\pullquote{Any girl can be glamorous. All you have to do is stand still and look stupid. I'd rather invent things.}{Hedy Lamarr}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Hedy_Lamarr}
+
+\newpage
+
+%% =============================================================
+\section{Alice Ball}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Alice_Ball.jpg
+%%           Save as: alice_ball.jpg
+
+\begin{scientistprofile}
+  {Alice Augusta Ball}
+  {1892 -- 1916}
+  {Chemistry}
+  {American}
+  {alice_ball.jpg}
+  {https://en.wikipedia.org/wiki/Alice_Ball}
+
+\subsubsection*{A Life Cut Tragically Short}
+Alice Augusta Ball was born on 24 July 1892 in Seattle, Washington. She was a gifted chemist who earned her bachelor's degree in pharmacy from the University of Washington (1912) and then a second degree in pharmaceutical chemistry before completing her Master of Science at the College of Hawaii in 1915 — becoming the first woman and first African-American to earn an MS from that institution.
+
+\subsubsection*{The First Effective Leprosy Treatment}
+Ball was hired by the college to research chaulmoogra oil, which had long been used in folk medicine to treat leprosy (Hansen's disease) but could not be injected because the body rejected it. At just 23 years old, Ball developed a method to extract the active ethyl ester compounds and create a form that could be administered by injection — \textbf{the first effective treatment for leprosy in the world}.
+
+\subsubsection*{Her Discovery Stolen}
+Alice Ball died in 1916, aged 24, before she could publish her findings. Her supervisor, Arthur Dean, continued using and publishing her method — without crediting her — calling it the ``Dean Method.'' The College of Hawaii awarded Dean an honorary degree for the work.
+
+It took the efforts of a fellow researcher, Harry Hollmann, who published a paper in 1922 explicitly crediting Ball, to begin correcting the record. The University of Hawaii formally acknowledged her contributions in 2000, and in 2007 the state of Hawaii declared 29 February ``Alice Ball Day.''
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 24 July 1892, Seattle, USA\\[3pt]
+\textbf{Died} & 31 December 1916, Seattle, USA (aged 24)\\[3pt]
+\textbf{Field} & Pharmaceutical Chemistry\\[3pt]
+\textbf{Key discovery} & Injectable treatment for leprosy (Hansen's disease)\\[3pt]
+\textbf{Injustice} & Supervisor Dean published her method without credit\\[3pt]
+\textbf{Legacy} & Alice Ball Day (29 Feb) in Hawaii; campus plaque at UH\\
+}
+
+\pullquote{[Her work] has for the first time made it possible to administer the active principles of chaulmoogra oil in concentrated form without danger.}{Harry Hollmann, 1922 — crediting Alice Ball}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Alice_Ball}
+
+\newpage
+
+%% =============================================================
+\section{Nettie Stevens}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Nettie_Stevens.jpg
+%%           Save as: nettie_stevens.jpg
+
+\begin{scientistprofile}
+  {Nettie Stevens}
+  {1861 -- 1912}
+  {Genetics / Cell Biology}
+  {American}
+  {nettie_stevens.jpg}
+  {https://en.wikipedia.org/wiki/Nettie_Stevens}
+
+\subsubsection*{How Sex Is Determined}
+Nettie Maria Stevens was born on 7 July 1861 in Cavendish, Vermont. After years of working as a teacher to save money, she earned her bachelor's and master's degrees from Stanford University before completing her PhD at Bryn Mawr College in 1903.
+
+In her landmark 1905 paper, Stevens reported that sex determination in mealworm beetles is linked to a specific chromosome: females have two large X chromosomes; males have one large X and one small Y chromosome. This was the first direct experimental evidence that a biological characteristic was determined by a specific chromosome — the foundation of the modern understanding of genetics.
+
+\subsubsection*{Credit Diluted by Male Colleagues}
+Edmund Wilson, a contemporary at Columbia University, published independent but simultaneous work on the same question. Textbooks for decades credited both Wilson and Stevens equally, or Wilson alone. Thomas Hunt Morgan — who later won the Nobel Prize in Physiology for his work on chromosomes — initially dismissed Stevens's findings, arguing that environment, not chromosomes, determined sex. He later changed his view but is often credited over Stevens in popular accounts.
+
+\subsubsection*{Legacy}
+Stevens died of breast cancer in 1912, aged 50, before the significance of her discovery was fully appreciated. Geneticist E.B. Wilson wrote: ``Miss Stevens had a share in a discovery of importance.'' The understatement is striking.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 7 July 1861, Cavendish, USA\\[3pt]
+\textbf{Died} & 4 May 1912, Baltimore, USA\\[3pt]
+\textbf{Field} & Cytogenetics, Genetics\\[3pt]
+\textbf{Key discovery} & XY sex-determination system in chromosomes (1905)\\[3pt]
+\textbf{Injustice} & Credit shared or taken by Wilson and Morgan\\[3pt]
+\textbf{Legacy} & Recognised in the National Women's Hall of Fame (1994)\\
+}
+
+\pullquote{I feel that I owe much to Professor Morgan's course in experimental zoology, as it was that which first interested me in the problem I have been investigating.}{Nettie Stevens — whose discoveries Morgan would later undermine}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Nettie_Stevens}
+
+\newpage
+
+%% =============================================================
+\section{Esther Lederberg}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Esther_Lederberg.jpg
+%%           Save as: esther_lederberg.jpg
+
+\begin{scientistprofile}
+  {Esther Lederberg}
+  {1922 -- 2006}
+  {Microbiology / Genetics}
+  {American}
+  {esther_lederberg.jpg}
+  {https://en.wikipedia.org/wiki/Esther_Lederberg}
+
+\subsubsection*{Pioneer of Bacterial Genetics}
+Esther Miriam Zimmer Lederberg was born on 18 December 1922 in the Bronx, New York. She earned her master's degree from Stanford and her PhD from University of Wisconsin-Madison in 1950. She is responsible for three foundational discoveries in microbiology.
+
+\subsubsection*{Three Foundational Discoveries}
+\textbf{Lambda phage} (1950): Lederberg discovered lambda phage, a virus that infects \textit{E. coli} and can integrate its genome into the bacterial chromosome — a discovery that launched decades of molecular biology research.
+
+\textbf{Replica plating} (1951): She invented the replica plating technique, which allowed researchers to quickly copy bacterial colonies from one petri dish to another to test for antibiotic resistance and other traits. This became one of the most widely used tools in microbiology.
+
+\textbf{Specialised transduction}: With her husband Joshua, she demonstrated how viruses can transfer genetic material between bacteria — a process of fundamental importance in genetics.
+
+\subsubsection*{The Nobel That Passed Her By}
+In 1958, Joshua Lederberg received the Nobel Prize in Physiology or Medicine for discoveries in bacterial genetics — work Esther had been central to. She was not included. After their divorce in 1966, Joshua Lederberg went on to greater institutional prominence while Esther's contributions were progressively forgotten.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 18 December 1922, Bronx, USA\\[3pt]
+\textbf{Died} & 11 November 2006, Stanford, USA\\[3pt]
+\textbf{Field} & Microbiology, Bacterial Genetics\\[3pt]
+\textbf{Key contributions} & Lambda phage, replica plating, specialised transduction\\[3pt]
+\textbf{Injustice} & Nobel (1958) went to husband Joshua Lederberg alone\\[3pt]
+\textbf{Legacy} & Esther M. Lederberg Microbiology \& Immunology Award established in her honour\\
+}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Esther_Lederberg}
+
+\newpage
+
+%% =============================================================
+\section{Hertha Ayrton}
+%% Portrait: Download from https://en.wikipedia.org/wiki/File:Hertha_Ayrton.jpg
+%%           Save as: hertha_ayrton.jpg
+
+\begin{scientistprofile}
+  {Hertha Ayrton}
+  {1854 -- 1923}
+  {Physics / Electrical Engineering}
+  {British}
+  {hertha_ayrton.jpg}
+  {https://en.wikipedia.org/wiki/Hertha_Ayrton}
+
+\subsubsection*{Arc Lights and Wave Patterns}
+Phoebe Sarah Marks — who renamed herself Hertha — was born on 28 April 1854 in Portsea, England, the daughter of a poor Jewish immigrant. She won a scholarship to Girton College, Cambridge, and studied mathematics, though Cambridge did not award degrees to women. She had to take external University of London exams to receive her actual degree.
+
+Ayrton conducted meticulous experimental research on the electric arc, publishing \textit{The Electric Arc} in 1902 — a comprehensive scientific reference that made her internationally respected. She also researched fluid dynamics, describing the formation of sand ripples and the movement of water in waves.
+
+\subsubsection*{Ayrton Fan and World War I}
+Ayrton invented a hand-operated fan that could dispel poisonous gas from trenches by creating vortices. The Ayrton fan was produced and distributed to British soldiers in World War I — though the Army initially resisted adopting it, and her role in its invention was minimised in official accounts.
+
+\subsubsection*{Rejected by the Royal Society}
+In 1902, Ayrton was proposed for Fellowship of the Royal Society — the first woman to be proposed. She was rejected on the grounds that as a married woman, she was not a legal ``person'' under British law. The Royal Society did not elect a female Fellow until 1945.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born} & 28 April 1854, Portsea, England\\[3pt]
+\textbf{Died} & 26 August 1923, North Lancing, England\\[3pt]
+\textbf{Field} & Electrical Engineering, Fluid Dynamics\\[3pt]
+\textbf{Key work} & Research on electric arc; invention of the Ayrton fan\\[3pt]
+\textbf{Injustice} & Rejected from Royal Society for being a married woman\\[3pt]
+\textbf{Legacy} & First woman to receive the Hughes Medal of the Royal Society (1906)\\
+}
+
+\pullquote{Personally, I do not agree with sex being brought into science at all. The idea of ``women and science'' is completely irrelevant. Either a woman is a good scientist or she is not.}{Hertha Ayrton}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Hertha_Ayrton}
+
+\newpage
+
+%% =============================================================
+\newpage
+\section{The Hidden Figures: Human Computers of Apollo}
+%% Portrait images:
+%% Katherine Johnson: already listed above (katherine_johnson.jpg)
+%% Dorothy Vaughan:   https://en.wikipedia.org/wiki/File:Dorothy_Vaughan.jpg
+%%                    Save as: dorothy_vaughan.jpg
+%% Mary Jackson:      https://en.wikipedia.org/wiki/File:Mary_W._Jackson.jpg
+%%                    Save as: mary_jackson.jpg
+
+\begin{tcolorbox}[motivationbox, title={Who Were the Hidden Figures?}]
+Before NASA had electronic computers powerful enough to be trusted for human spaceflight, it employed teams of mathematicians called \textbf{``human computers''} --- people who performed complex calculations by hand and with mechanical calculators. Among the most talented of these were a group of Black women mathematicians at NASA's Langley Research Center in Hampton, Virginia. Despite doing work that was critical to putting Americans in space and on the Moon, they were segregated, invisible in the public record, and uncredited for decades. Their story was brought to mainstream attention by Margot Lee Shetterly's 2016 book \textit{Hidden Figures} and the film of the same year.
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\subsection{The West Area Computing Unit}
+
+When the National Advisory Committee for Aeronautics (NACA, predecessor to NASA) needed more computing power during World War II, it hired African-American women mathematicians — but placed them in a segregated unit called the \textbf{West Area Computing section}, physically separate from white employees. They used different bathrooms, different cafeteria facilities, and attended separate briefings. Signs reading ``Colored Computers'' marked their section.
+
+Despite these conditions, the West Area Computers produced work of the highest technical quality. When NACA transitioned to NASA in 1958, some of these women moved into specialised engineering and analysis roles that had never before been held by women of any race. Three individuals stand out for contributions directly tied to the Apollo programme.
+
+\vspace{12pt}
+
+%% ── Katherine Johnson ─────────────────────────────────────────
+\begin{scientistprofile}
+  {Katherine Johnson}
+  {1918 -- 2020}
+  {Mathematics / Orbital Mechanics}
+  {American}
+  {katherine_johnson.jpg}
+  {https://en.wikipedia.org/wiki/Katherine_Johnson}
+
+\subsubsection*{The Woman Who Calculated the Moon}
+Creola Katherine Coleman was born on 26 August 1918 in White Sulphur Springs, West Virginia, showing mathematical ability so striking that her school advanced her four grades. She enrolled in college at 15, graduated at 18, and became one of three Black students selected to integrate West Virginia's graduate schools in 1939 --- then left to raise a family before returning to mathematics.
+
+\subsubsection*{Mercury, Friendship 7, and Apollo 11}
+Johnson joined NACA in 1953. Her ability to analyse complex three-dimensional geometry in space made her indispensable. She co-authored a foundational 1960 paper on orbital mechanics --- one of the first papers at NASA to carry a woman's name. For John Glenn's 1962 orbital mission aboard \textit{Friendship 7}, Glenn himself asked engineers to \textbf{``get the girl''} to verify the electronic computer's results before he would fly. Her numbers matched. He flew.
+
+For Apollo 11 (1969), Johnson calculated the trajectory that would allow the lunar module to rendezvous with the command module in lunar orbit. She also worked on the Space Shuttle programme and the Earth Resources Satellite.
+
+\subsubsection*{Recognition}
+Johnson received the Presidential Medal of Freedom in 2015. In 2017, NASA dedicated the \textit{Katherine G. Johnson Computational Research Facility} at Langley in her honour. She died on 24 February 2020, aged 101.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born}           & 26 August 1918, White Sulphur Springs, WV, USA\\[3pt]
+\textbf{Died}           & 24 February 2020 (aged 101)\\[3pt]
+\textbf{Field}          & Mathematics, Orbital Mechanics\\[3pt]
+\textbf{Key work}       & Trajectory calculations: Mercury, Friendship 7, Apollo 11\\[3pt]
+\textbf{Barrier}        & Racial segregation at NASA; uncredited for decades\\[3pt]
+\textbf{Recognition}    & Presidential Medal of Freedom (2015); NASA facility named after her\\
+}
+
+\pullquote{I was always around people who were looking for the answer. If the answer wasn't there, you just had to make it work.}{Katherine Johnson}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Katherine_Johnson}
+
+\vspace{12pt}
+
+%% ── Dorothy Vaughan ───────────────────────────────────────────
+\begin{scientistprofile}
+  {Dorothy Vaughan}
+  {1910 -- 2008}
+  {Mathematics / Computer Programming}
+  {American}
+  {dorothy_vaughan.jpg}
+  {https://en.wikipedia.org/wiki/Dorothy_Vaughan}
+
+\subsubsection*{First Black NASA Supervisor}
+Dorothy Jean Johnson Vaughan was born on 20 September 1910 in Kansas City, Missouri. She graduated in mathematics from Wilberforce University in 1929 and spent fourteen years as a mathematics teacher before joining NACA in 1943 as a human computer.
+
+\subsubsection*{Breaking the Supervisory Ceiling}
+In 1949, Vaughan became acting supervisor of the West Area Computing section --- effectively the \textbf{first Black supervisor at NACA/NASA}. She applied for the formal title repeatedly over several years before it was officially granted. She managed the unit with both technical rigour and protective care, advocating for her colleagues' promotions and assignments.
+
+\subsubsection*{Teaching Herself --- and NASA --- FORTRAN}
+When NASA acquired its first IBM electronic computers in the late 1950s, Vaughan immediately understood the implication: human computers would eventually be replaced. Rather than wait, she taught herself FORTRAN --- one of the first programming languages --- from a library book, and then \textbf{taught it to her entire section}, transitioning the group into programmers before the change swept them out. She became one of NASA's most skilled FORTRAN programmers and worked on the Scout Launch Vehicle Programme.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born}           & 20 September 1910, Kansas City, MO, USA\\[3pt]
+\textbf{Died}           & 10 November 2008 (aged 98)\\[3pt]
+\textbf{Field}          & Mathematics, FORTRAN Programming\\[3pt]
+\textbf{Key work}       & West Area Computing supervisor; Scout Launch Vehicle Programme\\[3pt]
+\textbf{Barrier}        & Denied supervisory title for years despite doing the job\\[3pt]
+\textbf{Recognition}    & Congressional Gold Medal (posthumous, 2019)\\
+}
+
+\pullquote{I changed what I could, and what I couldn't change, I endured.}{Dorothy Vaughan}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Dorothy_Vaughan}
+
+\vspace{12pt}
+
+%% ── Mary Jackson ──────────────────────────────────────────────
+\begin{scientistprofile}
+  {Mary Jackson}
+  {1921 -- 2005}
+  {Aerospace Engineering / Mathematics}
+  {American}
+  {mary_jackson.jpg}
+  {https://en.wikipedia.org/wiki/Mary_Jackson}
+
+\subsubsection*{First Black Female NASA Engineer}
+Mary Winston Jackson was born on 9 April 1921 in Hampton, Virginia. She completed a dual degree in mathematics and physical science at Hampton Institute in 1942, taught school for several years, then joined NACA as a human computer in 1951.
+
+\subsubsection*{Fighting for the Classroom}
+Jackson was assigned to work in the Supersonic Pressure Tunnel, where engineer Kazimierz Czarnecki encouraged her to pursue an engineering degree. The required graduate courses were held at a segregated school she was not permitted to attend. Jackson \textbf{petitioned the City of Hampton for permission} to attend the whites-only night classes --- and won. She completed the courses and in 1958 became \textbf{NASA's first Black female engineer}.
+
+\subsubsection*{Advocating for Others}
+Jackson spent her later career analysing data from wind tunnel and flight experiments, authoring or co-authoring 12 technical papers. Recognising that the promotion system disadvantaged women and minorities, she eventually left engineering to become NASA's Federal Women's Programme Manager, where she worked systematically to improve hiring and promotion practices for women at the agency.
+
+\end{scientistprofile}
+
+\keyfacts{
+\textbf{Born}           & 9 April 1921, Hampton, VA, USA\\[3pt]
+\textbf{Died}           & 11 February 2005 (aged 83)\\[3pt]
+\textbf{Field}          & Aerospace Engineering, Fluid Dynamics\\[3pt]
+\textbf{Key work}       & Supersonic wind tunnel analysis; 12 NASA technical papers\\[3pt]
+\textbf{Barrier}        & Barred from graduate classes due to segregation\\[3pt]
+\textbf{Recognition}    & Congressional Gold Medal (posthumous, 2019); NASA HQ renamed in her honour (2020)\\
+}
+
+\pullquote{Every time we get a chance to get ahead, we should take it.}{Mary Jackson}
+
+\textbf{Wikipedia:} \url{https://en.wikipedia.org/wiki/Mary_Jackson_(engineer)}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[factbox, title={The Apollo Connection: What They Actually Calculated}]
+\begin{tabular}{@{}p{0.22\linewidth}p{0.70\linewidth}@{}}
+\textbf{Katherine Johnson} & Lunar module ascent and rendezvous trajectory for Apollo 11; back-up abort procedures\\[5pt]
+\textbf{Dorothy Vaughan}   & FORTRAN programming for the Computational Division; Scout rocket trajectories\\[5pt]
+\textbf{Mary Jackson}      & Wind tunnel aerodynamic data analysis feeding into spacecraft design parameters\\[5pt]
+\textbf{The Unit Overall}  & Pre-mission trajectory checks, re-entry angle calculations, abort scenario planning for every crewed Mercury, Gemini, and Apollo flight\\
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[quotebox]
+Neil Armstrong stepped onto the Moon on 20 July 1969. The mathematics that put him there was written by hand, by Black women, in a segregated building in Virginia --- and for nearly fifty years, almost nobody knew their names.
+\end{tcolorbox}
+
+\newpage
+
+%% =============================================================
+\section*{The Bigger Picture: Structural Barriers}
+\addcontentsline{toc}{section}{The Bigger Picture: Structural Barriers}
+
+\begin{tcolorbox}[motivationbox, title={Why This Kept Happening}]
+
+The stories in this report are not isolated incidents. They reflect systemic structures that actively excluded women from full participation in science for centuries. Understanding these patterns is not defeatist — it is \textbf{empowering}, because it clarifies that these women's struggles were not due to any lack of brilliance on their part.
+
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\subsection*{The Nobel Problem}
+The Nobel Prize may not be awarded posthumously and is capped at three recipients. Women who were excluded from authorship, delayed in their careers, or simply died before justice arrived (Rosalind Franklin, Lise Meitner, Nettie Stevens) could not be retroactively honoured.
+
+\subsection*{The ``Assistant'' Trap}
+Many women were formally positioned as students, wives, or lab assistants — roles that made it structurally easy for supervisors or husbands to absorb credit. Esther Lederberg, Cecilia Payne-Gaposchkin, and Mileva Mari\'{c} all had their contributions filtered through male gatekeepers who controlled publication.
+
+\subsection*{Compounding Exclusions}
+Katherine Johnson and her colleagues faced both gender discrimination \emph{and} racial segregation. Alice Ball was both a woman and African American. Lise Meitner was both a woman and Jewish in Nazi Germany. Intersecting identities multiplied the barriers.
+
+\subsection*{Pattern of Delayed Recognition}
+Alice Ball's method was renamed by her supervisor; it took 84 years for formal credit to be restored. Hedy Lamarr received an honorary technology award one year before she died. Katherine Johnson's story reached mainstream awareness at age 97. ``Late'' recognition does not erase the injustice — but it does show that the truth does eventually surface.
+
+\newpage
+
+%% =============================================================
+\section*{Motivational Lessons for Students}
+\addcontentsline{toc}{section}{Motivational Lessons for Students}
+
+\begin{tcolorbox}[motivationbox, title={What These Stories Teach Us}]
+
+Every woman in this report faced barriers that would have stopped most people. None of them stopped. Here are the lessons their lives carry for every student today.
+
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\large\color{deepplum}\arabic*.}, itemsep=12pt]
+
+\item \textbf{The work speaks — eventually.}\\
+Rosalind Franklin's Photo 51 is now one of the most famous scientific images in history. Emmy Noether's theorem appears in every physics textbook. Truth in science, however long suppressed, tends to resurface. Do the work. Document it. Date it.
+
+\item \textbf{You don't need their permission to be brilliant.}\\
+Emmy Noether could not hold a salaried position for years. She kept developing mathematics that would revolutionise the field. Cecilia Payne-Gaposchkin was told her own results were wrong. She kept her data. You do not need institutional validation to think, to discover, or to be right.
+
+\item \textbf{Allies matter — find yours.}\\
+Lise Meitner had Max Born defending her. Jocelyn Bell Burnell had Fred Hoyle publicly calling out the Nobel committee. Harry Hollmann wrote the paper that restored Alice Ball's credit. Find people who will stand in your corner, and be that person for others.
+
+\item \textbf{Give credit freely and demand it be given to you.}\\
+The pattern of stolen credit in these stories is a lesson in what not to do — and what to insist upon. When you work in a team, cite collaborators. When your name is missing, say so.
+
+\item \textbf{Barriers against you say nothing about you.}\\
+Hertha Ayrton was rejected from the Royal Society because she was a married woman — a legal technicality that had nothing to do with science. Katherine Johnson worked in a segregated building. These rules were about \emph{other people's fear}, not about the women's capabilities. Do not internalise the prejudices of institutions that were not built for you.
+
+\item \textbf{You don't have to choose between values and science.}\\
+Lise Meitner refused the Manhattan Project on ethical grounds. Jocelyn Bell Burnell donated \pounds3 million to diversity in science. Hedy Lamarr invented to protect sailors' lives. Science and ethics, science and generosity, science and social commitment — these are not opposites.
+
+\item \textbf{Interdisciplinarity is a superpower.}\\
+Hedy Lamarr was an actress and an engineer. Rosalind Franklin moved from coal chemistry to DNA to virology. Emmy Noether connected pure mathematics and theoretical physics. Do not let anyone tell you that your range of interests is a weakness.
+
+\end{enumerate}
+
+\vspace{12pt}
+
+\begin{tcolorbox}[quotebox]
+The history of science is full of women who were invisible in their own time. The future of science will be written by those who refuse to be invisible in theirs.
+\end{tcolorbox}
+
+\newpage
+
+%% =============================================================
+\section*{Quick Reference Table}
+\addcontentsline{toc}{section}{Quick Reference Table}
+
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{@{} >{\bfseries}p{3.2cm} p{1.6cm} p{2.8cm} X @{}}
+\toprule
+\textbf{Name} & \textbf{Years} & \textbf{Field} & \textbf{Key Contribution \& Injustice}\\
+\midrule
+\rowcolor{softplum!40}
+Rosalind Franklin & 1920--1958 & Chemistry & Photo 51 (DNA helix); Nobel denied\\
+Lise Meitner & 1878--1968 & Nuclear Physics & Co-discovered fission; Nobel given to Hahn alone\\
+\rowcolor{softplum!40}
+Emmy Noether & 1882--1935 & Mathematics & Noether's Theorem; barred from positions\\
+Cecilia Payne-Gaposchkin & 1900--1979 & Astrophysics & Stars = H+He; forced to retract own result\\
+\rowcolor{softplum!40}
+Chien-Shiung Wu & 1912--1997 & Nuclear Physics & Proved parity violation; Nobel to Lee \& Yang\\
+Jocelyn Bell Burnell & 1943-- & Radio Astronomy & Discovered pulsars; Nobel to supervisor Hewish\\
+\rowcolor{softplum!40}
+Hedy Lamarr & 1914--2000 & Engineering & Invented Wi-Fi basis; no royalties\\
+Alice Ball & 1892--1916 & Chemistry & Leprosy treatment; credit taken by Dean\\
+\rowcolor{softplum!40}
+Katherine Johnson & 1918--2020 & Mathematics & Apollo 11 trajectory; racial + gender invisibility\\
+Nettie Stevens & 1861--1912 & Genetics & XY sex determination; credit to Wilson \& Morgan\\
+\rowcolor{softplum!40}
+Esther Lederberg & 1922--2006 & Microbiology & Lambda phage, replica plating; Nobel to husband\\
+Hertha Ayrton & 1854--1923 & Engineering & Electric arc; rejected from Royal Society\\
+\rowcolor{softplum!40}
+Dorothy Vaughan & 1910--2008 & Mathematics & NASA's first Black supervisor; taught herself FORTRAN\\
+Mary Jackson & 1921--2005 & Engineering & NASA's first Black female engineer; segregation barrier\\
+\bottomrule
+\end{tabularx}
+
+\newpage
+
+%% =============================================================
+\section*{Further Reading \& Resources}
+\addcontentsline{toc}{section}{Further Reading \& Resources}
+
+\subsection*{Books}
+
+\begin{itemize}[itemsep=6pt]
+\item Shetterly, M.L. (2016). \textit{Hidden Figures: The Untold Story of the African-American Women Who Helped Win the Space Race}. William Morrow. ISBN 978-0062363596.
+\item Lee, J. (2019). \textit{NASA's Hidden Figures}. National Geographic Society. ISBN 978-1426334412.
+\item Maddox, B. (2002). \textit{Rosalind Franklin: The Dark Lady of DNA}. HarperCollins. ISBN 978-0060184070.
+\item McGrayne, S.B. (1993). \textit{Nobel Prize Women in Science: Their Lives, Struggles, and Momentous Discoveries}. Birch Lane Press. ISBN 978-1559722285.
+\item Sime, R.L. (1996). \textit{Lise Meitner: A Life in Physics}. University of California Press. ISBN 978-0520208605.
+\item Dick, S.J. (2013). \textit{Discovery and Classification in Astronomy}. Cambridge University Press. (includes Payne-Gaposchkin).
+\item Sobel, D. (2016). \textit{The Glass Universe: How the Ladies of the Harvard Observatory Took the Measure of the Stars}. Viking. ISBN 978-0670016952.
+\end{itemize}
+
+\subsection*{Academic Papers}
+
+\begin{itemize}[itemsep=6pt]
+\item Franklin, R.E. \& Gosling, R.G. (1953). ``Molecular Configuration in Sodium Thymonucleate.'' \textit{Nature}, 171(4356), 740--741. \url{https://doi.org/10.1038/171740a0}
+\item Payne, C.H. (1925). \textit{Stellar Atmospheres} (PhD thesis). Harvard Observatory Monographs No.~1.
+\item Meitner, L. \& Frisch, O.R. (1939). ``Disintegration of Uranium by Neutrons: A New Type of Nuclear Reaction.'' \textit{Nature}, 143, 239--240. \url{https://doi.org/10.1038/143239a0}
+\item Wu, C.S. et al. (1957). ``Experimental Test of Parity Conservation in Beta Decay.'' \textit{Physical Review}, 105(4), 1413--1415. \url{https://doi.org/10.1103/PhysRev.105.1413}
+\item Hewish, A., Bell, S.J. et al. (1968). ``Observation of a Rapidly Pulsating Radio Source.'' \textit{Nature}, 217, 709--713. \url{https://doi.org/10.1038/217709a0}
+\end{itemize}
+
+\subsection*{Wikipedia Articles (verified links)}
+
+\begin{multicols}{2}
+\begin{itemize}[itemsep=4pt, label=\textcolor{steelblue}{\textbullet}]
+\item \href{https://en.wikipedia.org/wiki/Rosalind_Franklin}{Rosalind Franklin}
+\item \href{https://en.wikipedia.org/wiki/Lise_Meitner}{Lise Meitner}
+\item \href{https://en.wikipedia.org/wiki/Emmy_Noether}{Emmy Noether}
+\item \href{https://en.wikipedia.org/wiki/Cecilia_Payne-Gaposchkin}{Cecilia Payne-Gaposchkin}
+\item \href{https://en.wikipedia.org/wiki/Chien-Shiung_Wu}{Chien-Shiung Wu}
+\item \href{https://en.wikipedia.org/wiki/Jocelyn_Bell_Burnell}{Jocelyn Bell Burnell}
+\item \href{https://en.wikipedia.org/wiki/Hedy_Lamarr}{Hedy Lamarr}
+\item \href{https://en.wikipedia.org/wiki/Alice_Ball}{Alice Ball}
+\item \href{https://en.wikipedia.org/wiki/Katherine_Johnson}{Katherine Johnson}
+\item \href{https://en.wikipedia.org/wiki/Nettie_Stevens}{Nettie Stevens}
+\item \href{https://en.wikipedia.org/wiki/Esther_Lederberg}{Esther Lederberg}
+\item \href{https://en.wikipedia.org/wiki/Hertha_Ayrton}{Hertha Ayrton}
+\item \href{https://en.wikipedia.org/wiki/Dorothy_Vaughan}{Dorothy Vaughan}
+\item \href{https://en.wikipedia.org/wiki/Mary_Jackson_(engineer)}{Mary Jackson}
+\end{itemize}
+\end{multicols}
+
+\subsection*{Documentaries and Films}
+
+\begin{itemize}[itemsep=6pt]
+\sloppy
+\item \textit{Hidden Figures} (2016, dir. Theodore Melfi) — Katherine Johnson, Dorothy Vaughan, Mary Jackson.
+\item \textit{Radioactive} (2019, dir. Marjane Satrapi) — Marie Curie (not covered in this report, but essential context).
+\item \textit{Photo 51} (2015, BBC Radio play) — Rosalind Franklin.
+\item \textit{Bombshell: The Hedy Lamarr Story} (2017, dir. Alexandra Dean) — documentary on Lamarr's invention.
+\end{itemize}
+
+\subsection*{Online Resources}
+
+\begin{itemize}[itemsep=6pt]
+\item \textbf{Scientista Foundation:} \url{https://www.scientistafoundation.com} — community and resources for women in STEM.
+\item \textbf{500 Women Scientists:} \url{https://500womenscientists.org} — advocacy organisation.
+\item \textbf{Association for Women in Science:} \url{https://www.awis.org}
+\item \textbf{AIP -- Women in Physics:} \url{https://www.aip.org/statistics/women}
+\end{itemize}
+
+\newpage
+
+%% =============================================================
+\section*{References}
+\addcontentsline{toc}{section}{References}
+
+\begin{enumerate}[leftmargin=*, label={[\arabic*]}, itemsep=6pt]
+\sloppy
+
+\item Watson, J.D. \& Crick, F.H.C. (1953). A structure for deoxyribose nucleic acid. \textit{Nature}, 171, 737--738.
+\item Maddox, B. (2002). \textit{Rosalind Franklin: The Dark Lady of DNA}. HarperCollins, London.
+\item Sime, R.L. (1996). \textit{Lise Meitner: A Life in Physics}. University of California Press, Berkeley.
+\item Meitner, L. \& Frisch, O.R. (1939). Disintegration of uranium by neutrons. \textit{Nature}, 143, 239.
+\item Noether, E. (1918). Invariante Variationsprobleme. \textit{Nachrichten von der Gesellschaft der Wissenschaften zu G\"{o}ttingen}, 235--257.
+\item Dick, S.J. (2013). \textit{Discovery and Classification in Astronomy}. Cambridge University Press.
+\item Payne, C.H. (1925). \textit{Stellar Atmospheres}. Harvard Observatory Monographs, Cambridge, MA.
+\item Wu, C.S., Ambler, E., Hayward, R.W., Hoppes, D.D., \& Hudson, R.P. (1957). Experimental test of parity conservation in beta decay. \textit{Physical Review}, 105(4), 1413.
+\item Hewish, A., Bell, S.J., Pilkington, J.D.H., Scott, P.F., \& Collins, R.A. (1968). Observation of a rapidly pulsating radio source. \textit{Nature}, 217, 709--713.
+\item Rhodes, R. (1986). \textit{The Making of the Atomic Bomb}. Simon \& Schuster, New York.
+\item Lamarr, H. \& Antheil, G. (1942). \textit{Secret Communications System}. US Patent 2,292,387.
+\item Hollmann, H.T. (1922). The fatty acids of chaulmoogra oil in the treatment of leprosy and other diseases. \textit{Archives of Dermatology and Syphilology}, 5(1), 105--106.
+\item Shetterly, M.L. (2016). \textit{Hidden Figures}. William Morrow, New York.
+\item Johnson, K.G. (1960). \textit{Determination of Azimuth Angle at Burnout for Placing a Satellite over a Selected Earth Position}. NASA Technical Note D-233.
+\item Morgan, T.H. (1910). Sex-limited inheritance in Drosophila. \textit{Science}, 32(812), 120--122.
+\item Stevens, N.M. (1905). \textit{Studies in Spermatogenesis}. Carnegie Institution of Washington, Publication No. 36.
+\item Lederberg, E.M. (1951). Lysogenicity in \textit{E. coli} K-12. \textit{Genetics}, 36, 560.
+\item Lederberg, J. \& Lederberg, E.M. (1952). Replica plating and indirect selection of bacterial mutants. \textit{Journal of Bacteriology}, 63(3), 399--406.
+\item Hughes, J.D. (2003). Hertha Ayrton. \textit{Physics Today}, 56(12).
+\item Sharp, E. (1926). \textit{Hertha Ayrton: A Memoir}. Edward Arnold, London.
+\item McGrayne, S.B. (1993). \textit{Nobel Prize Women in Science}. Birch Lane Press, New York.
+\item Sobel, D. (2016). \textit{The Glass Universe}. Viking, New York.
+\item Shetterly, M.L. (2016). \textit{Hidden Figures: The Untold Story of the African-American Women Who Helped Win the Space Race}. William Morrow, New York.
+\item Johnson, K.G. (1960). \textit{Determination of Azimuth Angle at Burnout for Placing a Satellite over a Selected Earth Position}. NASA Technical Note D-233.
+\item Vaughan, D.J. (1949--1971). Internal NACA/NASA computing section reports. NASA Langley Research Center Archives.
+\item Jackson, M.W. et al. (1958--1976). Selected aerodynamics and wind tunnel technical reports. NASA Langley Research Center.
+\item Lee, J. (2019). \textit{NASA's Hidden Figures: The Black Women Who Helped Win the Space Race}. National Geographic Society.
+\item Melfi, T. (dir.) (2016). \textit{Hidden Figures} [Film]. Fox 2000 Pictures / Chernin Entertainment.
+
+\end{enumerate}
+
+%% ── Apology and invitation ───────────────────────────────────
+\newpage
+\section*{A Note of Apology — and an Invitation}
+\addcontentsline{toc}{section}{A Note of Apology and an Invitation}
+
+\begin{tcolorbox}[motivationbox, title={To Every Woman We Did Not Name}]
+This report contains fourteen profiles. History contains thousands more.
+
+We are aware --- and deeply sorry --- that this list is incomplete. The women featured here are among the most documented cases of overlooked genius in science, but the true extent of this history is far wider and far deeper than any single document can hold. For every name on these pages, there are many more whose stories have not yet been told, whose papers were filed under someone else's name, whose contributions were absorbed into the work of institutions that did not acknowledge them, or whose records were simply never kept.
+
+Behind every famous discovery is a web of collaboration, correspondence, and quiet labour. Many of those threads were held by women. Not all of those women have Wikipedia pages. Not all of them have portraits. Some are known only through a single line in a laboratory logbook, or a footnote in a colleague's memoir.
+
+The absence of a name from this report is not a judgement of importance. It is a reflection of the limits of what we could research, verify, and document responsibly within this work.
+
+We are sorry for every name we missed. We intend this document to be a beginning, not a conclusion.
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[factbox, title={Do You Know Someone We Missed?}]
+
+\begin{center}
+{\large\color{deepplum}\bfseries Help us grow this list.}
+\end{center}
+
+\vspace{6pt}
+
+If you know of a woman scientist whose story belongs in this document --- a researcher whose credit was taken, a mathematician who was barred from the room, an engineer whose name was erased --- \textbf{we want to hear from you}.
+
+\vspace{8pt}
+
+This report is published as an open repository on GitHub. You can suggest additions, corrections, or entirely new profiles by:
+
+\vspace{6pt}
+
+\begin{itemize}[itemsep=5pt]
+  \item \textbf{Opening an issue} on the GitHub repository with the scientist's name, field, and a brief description of her contribution and the injustice she faced
+  \item \textbf{Submitting a pull request} with a new profile written in the same style as the existing ones, with at least two verifiable sources cited
+  \item \textbf{Sharing this document} with students, teachers, and researchers who may know names that we do not
+\end{itemize}
+
+\vspace{8pt}
+
+The only requirement is accuracy. Every claim must be sourced. These women deserve to be remembered correctly.
+
+\vspace{10pt}
+
+\begin{center}
+{\small\color{steelblue}
+\href{https://github.com/fastelectron/TheUnsung}{\textbf{github.com/fastelectron/TheUnsung}}
+}
+\end{center}
+
+\vspace{4pt}
+
+\begin{center}
+{\small\color{medgray}\itshape
+Some names already waiting to be added:\\[4pt]
+Williamina Fleming $\cdot$ Vera Rubin $\cdot$ Maryam Mirzakhani\\
+Sau Lan Wu $\cdot$ Wangari Maathai $\cdot$ Fran\c{c}oise Barr\'{e}-Sinoussi\\
+Chandra Prescod-Weinstein $\cdot$ Tu Youyou $\cdot$ Rosalyn Yalow\\
+Mileva Mari\'{c} $\cdot$ Trotula of Salerno $\cdot$ Eunice Newton Foote\\[4pt]
+\ldots and countless others whose names we do not yet know.
+}
+\end{center}
+
+\end{tcolorbox}
+
+\vspace{10pt}
+
+%% ── Back cover ───────────────────────────────────────────────
+\newpage
+\pagecolor{deepplum}
+\color{white}
+\thispagestyle{empty}
+\vspace*{3cm}
+\begin{center}
+
+{\color{goldhigh}\large\itshape ``The history of science is full of women who were invisible in their own time.}\\[0.5cm]
+{\color{goldhigh}\large\itshape The future of science will be written by those who refuse}\\[0.3cm]
+{\color{goldhigh}\large\itshape to be invisible in theirs.''}
+
+\vspace{1.5cm}
+{\color{medgray}\rule{10cm}{0.4pt}}
+\vspace{1cm}
+
+{\large This report is dedicated to every student who has ever been\\[0.3cm]
+told that science is not for people like them.}
+
+\vspace{1.5cm}
+{\color{medgray}\rule{10cm}{0.4pt}}
+\vspace{1cm}
+
+\begin{minipage}{0.82\textwidth}
+\centering
+{\color{softplum}\itshape
+If you know a name that belongs in these pages ---\\[0.4cm]
+a discovery that was taken, a career that was blocked,\\
+a woman whose work changed the world without her permission ---\\[0.6cm]
+{\color{goldhigh}\bfseries\large please tell us.}\\[0.6cm]
+This document is alive. It will grow.\\[0.4cm]
+Open an issue on GitHub.\\[0.3cm]
+{\footnotesize\color{medgray}github.com/fastelectron/TheUnsung}
+}
+\end{minipage}
+
+\vspace{1.5cm}
+{\color{medgray}\footnotesize Compiled for educational use, 2026 $\cdot$ CC BY 4.0}\\[5pt]
+{\color{softplum!70}\footnotesize Generated using \textbf{Claude Sonnet 4.6} by \href{https://www.anthropic.com}{\color{goldhigh}Anthropic} $\cdot$ 23 March 2026, 09:52 UTC}
+
+\end{center}
+
+\end{document}

@@ -1,0 +1,20 @@
+\contentsline {section}{Foreword}{3}{Doc-Start}%
+\contentsline {section}{\numberline {1}Rosalind Franklin}{4}{section.1}%
+\contentsline {section}{\numberline {2}Lise Meitner}{6}{section.2}%
+\contentsline {section}{\numberline {3}Emmy Noether}{8}{section.3}%
+\contentsline {section}{\numberline {4}Cecilia Payne-Gaposchkin}{10}{section.4}%
+\contentsline {section}{\numberline {5}Chien-Shiung Wu}{12}{section.5}%
+\contentsline {section}{\numberline {6}Jocelyn Bell Burnell}{14}{section.6}%
+\contentsline {section}{\numberline {7}Hedy Lamarr}{16}{section.7}%
+\contentsline {section}{\numberline {8}Alice Ball}{18}{section.8}%
+\contentsline {section}{\numberline {9}Nettie Stevens}{20}{section.9}%
+\contentsline {section}{\numberline {10}Esther Lederberg}{22}{section.10}%
+\contentsline {section}{\numberline {11}Hertha Ayrton}{24}{section.11}%
+\contentsline {section}{\numberline {12}The Hidden Figures: Human Computers of Apollo}{26}{section.12}%
+\contentsline {subsection}{\numberline {12.1}The West Area Computing Unit}{26}{subsection.12.1}%
+\contentsline {section}{The Bigger Picture: Structural Barriers}{32}{subsection.12.1}%
+\contentsline {section}{Motivational Lessons for Students}{33}{subsection.12.1}%
+\contentsline {section}{Quick Reference Table}{35}{Item.7}%
+\contentsline {section}{Further Reading \& Resources}{36}{Item.7}%
+\contentsline {section}{References}{38}{Item.7}%
+\contentsline {section}{A Note of Apology and an Invitation}{40}{Item.35}%
